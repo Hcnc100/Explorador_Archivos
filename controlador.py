@@ -17,6 +17,7 @@ class Controlador():
         for nombre,direccion in self.directorios.items():
             auxButton=Button(master=b_lateral,text=nombre)
             auxButton.pack(fill=X)
+            print("Hola")
     def definir_directorios(self):
         directorios={}
         if name == "posix":
