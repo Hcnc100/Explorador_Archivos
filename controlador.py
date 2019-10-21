@@ -6,7 +6,8 @@ from tkinter import X
 from PIL import ImageTk
 from math import ceil
 from icons import Icono
-from tkinter import RIGHT, Y, DISABLED, ACTIVE
+from tkinter import HORIZONTAL,BOTH
+from tkinter.ttk import Separator
 class Controlador():
     """
         Clase dedicada a determinar el directorio , el prpcesamiento de los archivos
@@ -21,24 +22,20 @@ class Controlador():
         home = expanduser("~")
         print(home)
         if (name == "nt"):
-            self.dirHome = home + "\Documents"
-            self.dirImagenes = home + "\Documents\Files\Imagenes"
-            self.dirTexto = home + "\Documents\Files\Documentos"
+            self.listadir={"Documentos":"\Documents","Escritorio":"\Desktop","Descargas":"\Downloads","Imagenes":"\Pictures"}
+            for key,value in self.listadir.items():
+                self.listadir[key]= home+value
+            print(self.listadir)
         else:
             self.dirHome = home + "/Files"
             self.dirImagenes = home + "/Files/Imagenes"
             self.dirTexto = home + "/Files/Documentos"
-        self.directorio_actual = self.dirHome
-        self.create_dirs()
-        self.actualizar()
+        self.directorio_actual =getcwd()
+        self.actualizar_canvas()
     def clearSelect(self):
         for icono in self.listaIcons:
             icono.clearSelect()
-    def create_dirs(self):
-            if not exists(self.dirImagenes):
-                makedirs(self.dirImagenes)
-            if not exists(self.dirTexto):
-                makedirs(self.dirTexto)
+
     def get_numero_archivos(self):
         return len(self.lista_files)
     def init_icons(self, root):
@@ -88,22 +85,38 @@ class Controlador():
             if icono.contais(x, y):
                 return icono
         return None
-
+    def actualizar_direccion(self,nueva_direccion):
+        self.directorio_actual=nueva_direccion
+        self.actualizar_canvas()
     def crear_barra(self,b_lateral):
-       # self.directorios=self.definir_directorios()
-        #for nombre,direccion in self.directorios.items():
-         #   auxButton=Button(master=b_lateral,text=nombre)
-          #  auxButton.pack(fill=X)
-        pass
-
+        """
+        Funcion dedicada a crear la barra lateral de los accesos directos que varian dependiendo del sistena operativo
+        :param b_lateral: la barra proporcionada por la interfaz
+        :return:
+        """
+        for nombre,direccion in self.listadir.items():
+            separador=Separator(b_lateral, orient=HORIZONTAL)
+            separador.pack(fill=BOTH,expand=True)
+            auxButton=Button(master=b_lateral,text=nombre,command=lambda direccion=direccion:self.actualizar_direccion(direccion))
+            auxButton.pack(fill=X)
+        separador = Separator(b_lateral, orient=HORIZONTAL)
+        separador.pack(fill=BOTH, expand=True)
     def dibujar(self):
+        """
+        Este metodo se basa en la aliminacion de todos los elementos del canvas
+        y luego llama a la funcion create_iconos para poder hacer nuevos iconos
+        :return: None
+        """
+        #se eliminan todos los elementos del canvas
         self.canvas.delete("all")
         self.canvas.update()
         self.redefinir_canvas()
+        #se obteniene los iconos
         self.listaIcons = self.create_iconos(self.directorio_actual)
+        # se pintan los iconos
         for icon in self.listaIcons:
             icon.dibujar(self.canvas)
-    def actualizar(self):
+    def actualizar_canvas(self):
         self.lista_files = self.get_lista_files(self.directorio_actual)
         self.dibujar()
     def click_izquierdo(self, event):
@@ -114,6 +127,7 @@ class Controlador():
         self.clearSelect()
         if auxIcono != None:
             auxIcono.setSelect()
+
     def click_dentro_icon(self, x, y):
         for icon in self.listaIcons:
             if icon.contais(x, y):
@@ -121,6 +135,15 @@ class Controlador():
         return None
 
     def doble_click_izquierdo(self, event):
+        """
+        funcion doble_click_izquierdo
+            Funcion que se basa en el evebto de dar click sobre el canvas
+            Si se le da click sobre un icono se selecciona
+            Si se le da click a un icono y otro esat seleccionado se deselecciona y se selecciona el nuevo icono
+            Si se da click sobre un espacio vacio se deselecciona si esque se habia seleccionado algo antes
+        :param event: Evento lanzado por el canvas al dar doble click
+        :return: None
+        """
         canvas = event.widget
         x = canvas.canvasx(event.x)
         y = canvas.canvasy(event.y)
@@ -130,10 +153,18 @@ class Controlador():
             if auxIcono.type == "carpeta":
                 self.directorio_actual = auxIcono.direccion
                 print(self.directorio_actual)
-                self.actualizar()
+                self.actualizar_canvas()
             else:
                 auxIcono.setSelect()
     def create_iconos(self, direccion):
+        """
+        Funcion create_icons
+            La funcion lo que hace es asiciar los iconos a los archivos por medio de la clasificacion de estos
+            Se le asigna ina imagen normal y una imagen cuando se a seleccionado o se situa sobre el
+        :param direccion: necesita la direccion de donde se muestran los archivos de forma grafica
+        :return: ListIcon que es una lista que contiene todas las referncias ya con su icono
+        """
+
         contenido = self.get_lista_files(direccion)
         listIcon = []
         x = 50
