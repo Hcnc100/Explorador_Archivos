@@ -7,8 +7,7 @@ class Interfaz():
     """
     def __init__(self):
         """
-            Esta clase incia la interfaz
-            se crea un canvas y una barra lateral(un frame)
+            Inicia los componentes
         """
         root=Tk()
         frame=Frame(root,height=500)
@@ -20,5 +19,7 @@ class Interfaz():
         controlador = Controlador(root,canvas,None)
         controlador.crear_barra(b_lateral)
 
+        #se asocia  el evento doble click
         canvas.bind("<Double-Button-1>", controlador.doble_click_izquierdo)
+        #se inicia la interfaz
         root.mainloop()
