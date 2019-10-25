@@ -21,5 +21,5 @@ class Interfaz():
 
         #se asocia  el evento doble click
         canvas.bind("<Double-Button-1>", controlador.doble_click_izquierdo)
-        #se inicia la interfaz
+        #se inicia la interfaz c <
         root.mainloop()
