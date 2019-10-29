@@ -19,7 +19,12 @@ class Interfaz():
         controlador = Controlador(root,canvas,None)
         controlador.crear_barra(b_lateral)
 
+        menu = Menu(root, tearoff=0)
+
         #se asocia  el evento doble click
         canvas.bind("<Double-Button-1>", controlador.doble_click_izquierdo)
+
+        canvas.bind("<Button-3>", lambda event:controlador.create_pop_menu(event,menu))
+
         #se inicia la interfaz c <
         root.mainloop()

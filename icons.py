@@ -20,6 +20,7 @@ class Icono():
         :param canvas: Canvas donde se pintaran lo iconos
         :return:
         """
+        self.canvas=canvas
         # se crea un icono anexando una imagen que se presentara cuando se pase el mouse sobre el icono
         self.identificador=canvas.create_image(self.x,self.y,image=self.img,activeimage=self.img_select)
 
@@ -42,13 +43,13 @@ class Icono():
         Funcion setselect , esta funcion se encarga de cambiar el icono por la imagen seleccionada del mismo icoos
         :return: None
         """
-        self.frame.itemconfigure(self.identificador,image=self.img_select)
+        self.canvas.itemconfigure(self.identificador,image=self.img_select)
     def clearSelect(self):
         """
         Funcion clearSelect , esta funcion se encarga de cambiar el icono por el icnono predeterminado
         :return: None
         """
-        self.frame.itemconfigure(self.identificador,image=self.img)
+        self.canvas.itemconfigure(self.identificador,image=self.img)
 
     def contais(self,x,y):
         """

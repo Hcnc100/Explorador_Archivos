@@ -1,20 +1,19 @@
-from os import  getcwd
-from os import name,listdir,makedirs
-from os.path import expanduser,join,isdir,exists
-from tkinter import Button
-from tkinter import X
+from os import name,listdir,getcwd
+from os.path import expanduser,join,isdir
 from PIL import ImageTk
 from math import ceil
 from icons import Icono
-from tkinter import HORIZONTAL,BOTH
+from tkinter import HORIZONTAL,BOTH,X,Button
 from tkinter.ttk import Separator
+from filemanager import FileManager
 class Controlador():
     """
         Clase dedicada a determinar el directorio , el prpcesamiento de los archivos
         asi como la actualizacion del gui
     """
     def __init__(self,root,canvas,scrollbar):
-
+        #Se inicia el conbtrolador de los archivos
+        self.FileManager=FileManager()
         #Se asignan las varibles externas como varibles internas de la clase
         self.root = root
         self.canvas = canvas
@@ -277,3 +276,44 @@ class Controlador():
                 y += 100
                 x = 50
         return listIcon
+
+    def create_pop_menu(self,event,menu):
+        """
+                funcion que si se selecciona doble click sobre una carpeta se cambia la direccion actual,
+                si no se abre el archivo con ya ayuda del sistema operativo
+                :param event: Evento lanzado por el canvas al dar doble click
+                :return: None
+                """
+
+        # se elimina la opciones del menu
+        menu.delete(0, 'end')
+
+        # se obitne las ccoordenadas
+        x=event.x_root
+        y=event.y_root
+
+        # se determina si se dio doble click sobre un icono
+        auxIcono = self.click_dentro_icon(x, y)
+
+        # si hay un icono selessionado con anterioridad se limpia
+        self.clearSelect()
+        if  auxIcono!=None:
+            options = self.getoptionsfile(auxIcono.type,self.directorio_actual)
+        else:
+            options=self.getoptionsfile(None,self.directorio_actual)
+        self.agregar_menus(menu,options)
+        menu.post(x,y)
+
+    def agregar_menus(self,menu,lista):
+        for nombre,funcion in lista.items():
+            menu.add_command(label=nombre, command=funcion)
+    def getoptionsfile(self,type,ruta):
+        if type=="carpeta":
+            pass
+        elif type=="file":
+            pass
+        else:
+            return{
+                "Nueva Carpeta":lambda :self.FileManager.new_directory(ruta),
+                "Nuevo Archivo":lambda :self.FileManager.new_file(ruta)
+            }
