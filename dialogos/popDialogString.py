@@ -28,6 +28,11 @@ def topGetStringName(root=None,titulo="Sin tutulo",modal=True, stringDefault="Da
     :param stringDefault: El valor por defecto del texto de ayuda que se mostrara
     :return:None
     """
+
+    x = root.winfo_x()
+    y = root.winfo_y()
+
+
     global respuesta
     # se inicia la respuesta en None para eliminar la basura
     answer = None
@@ -35,7 +40,11 @@ def topGetStringName(root=None,titulo="Sin tutulo",modal=True, stringDefault="Da
     # se crea el toplevel
     toplevel = Toplevel(root)
 
+    #Se establece el titulo
     toplevel.title(titulo)
+
+    #se posiciona el toplevel enfrente de la ventana principal
+    toplevel.geometry("+%d+%d" % (x + 200, y + 200))
 
     #se evita que se redimencione la pantalla
     toplevel.resizable(0, 0)
