@@ -6,6 +6,7 @@ from icons import Icono
 from tkinter import HORIZONTAL,BOTH,X,Button
 from tkinter.ttk import Separator
 from filemanager import FileManager
+from dialogos.popDialogString import topGetStringName
 class Controlador():
     """
         Clase dedicada a determinar el directorio , el prpcesamiento de los archivos
@@ -304,6 +305,22 @@ class Controlador():
         self.agregar_menus(menu,options)
         menu.post(x,y)
 
+    def nuevo_directorio(self,ruta):
+        nombreDirectorio=topGetStringName(self.root,"Nueva Carpeta",True,"Dame el nombre de la carpeta")
+        if nombreDirectorio:
+            if nombreDirectorio=="":
+                print("Nombre No valido")
+            else:
+                self.FileManager.new_directory(join(ruta,nombreDirectorio))
+                self.actualizar_canvas()
+    def nuevo_archivo(self,ruta):
+        nombreArchivo = topGetStringName(self.root, "Nueva Archivo", True, "Dame el nombre del archivo")
+        if nombreArchivo:
+            if nombreArchivo == "":
+                print("Nombre No valido")
+            else:
+                self.FileManager.new_file(join(ruta, nombreArchivo))
+                self.actualizar_canvas()
     def agregar_menus(self,menu,lista):
         for nombre,funcion in lista.items():
             menu.add_command(label=nombre, command=funcion)
@@ -314,6 +331,6 @@ class Controlador():
             pass
         else:
             return{
-                "Nueva Carpeta":lambda :self.FileManager.new_directory(ruta),
-                "Nuevo Archivo":lambda :self.FileManager.new_file(ruta)
+                "Nueva Carpeta":lambda :self.nuevo_directorio(ruta),
+                "Nuevo Archivo":lambda :self.nuevo_archivo(ruta)
             }

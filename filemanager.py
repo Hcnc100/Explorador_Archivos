@@ -11,22 +11,15 @@ class FileManager():
     def copy(self):
         pass
     def new_directory(self,ruta):
-        print("nueva carpeta")
-        print(ruta)
-        print(exists(ruta))
-        ruta=join(ruta, "Nueva Carpeta")
-        print(exists(ruta))
-        print(ruta)
         if exists(ruta):
-            pass
+            print("La carpeta ya existe")
         else:
             mkdir(ruta)
     def new_file(self,ruta):
-        print("nueva archivo")
-        #if exists(ruta):
-        #    pass
-        #else:
-        #    self.touch(ruta)
+        if exists(ruta):
+            print("El archivo ya existe")
+        else:
+            self.touch(ruta)
     def paste(self):
         pass
     def propiedades(self):
